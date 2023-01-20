@@ -8,7 +8,7 @@ function BASE_URL_AJAX(file_ajax) {
     return "http://localhost/ControlesOs1/src/resource/api/" + file_ajax + ".php";
 }
 function ChamarOutraPagina(pagina){
-    window.location.replace(pagina + ".php");
+    location = pagina + ".php";
 }
 function NotificarCampo(nome_id) {
     if ($("#" + nome_id).val().trim() == '')
@@ -77,7 +77,6 @@ function GetTnk() {
 function Verify() {
     if (localStorage.getItem('user_tkn') === null)
         location = "login.php";
-    
 } 
 function ClearTnk() {
     localStorage.clear();

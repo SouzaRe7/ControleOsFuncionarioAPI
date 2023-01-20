@@ -1,6 +1,7 @@
 function CarregarMeusDados(){
-    var dadosAPI = GetTnkValue();
-    var id_user_logado = dadosAPI.id_fucionario;
+    //var dadosAPI = GetTnkValue();
+    //var id_user_logado = dadosAPI.id_fucionario;
+    var id_user_logado = "30";
     var endpoint_cliente = "DetalharMeusDadosAPI";
     var dados = {
         endpoint: endpoint_cliente,
@@ -30,9 +31,11 @@ function CarregarMeusDados(){
 
 function AlterarMeusDados(id_form){
     if(NotificarCamposGenerico(id_form)){
-        var dadosAPI = GetTnkValue();
-        var id_user_logado = dadosAPI.id_fucionario;
-        var id_setor_fun = dadosAPI.setor_usuario;
+        //var dadosAPI = GetTnkValue();
+        //var id_user_logado = dadosAPI.id_fucionario;
+        //var id_setor_fun = dadosAPI.setor_usuario;
+        var id_user_logado = "30";
+        var id_setor_fun = "23";
         var dados = {
             id_user: id_user_logado,
             endpoint: "AlterarMeusDadosAPI", 
@@ -68,8 +71,9 @@ function AlterarMeusDados(id_form){
 }
 
 function CarregarEquipamentosAlocados(){
-    var dadosAPI = GetTnkValue();
-    var id_setor_fun = dadosAPI.setor_usuario;
+    //var dadosAPI = GetTnkValue();
+    //var id_setor_fun = dadosAPI.setor_usuario;
+    var id_setor_fun = "23";
     var combo_equipamento = $("#equipamento");
     combo_equipamento.empty();
     var dados = {
@@ -98,8 +102,9 @@ function CarregarEquipamentosAlocados(){
 
 function AbrirChamado(id_form){
     if(NotificarCamposGenerico(id_form)){
-        var dadosAPI = GetTnkValue();
-        var id_user_logado = dadosAPI.id_fucionario;
+        //var dadosAPI = GetTnkValue();
+        //var id_user_logado = dadosAPI.id_fucionario;
+        var id_user_logado = "30";
         var dados = {
             endpoint: "AbrirChamadoAPI",
             id_user: id_user_logado,
@@ -189,7 +194,8 @@ function FiltrarChamado(){
 function VerificarSenhaAtual(id_form){
     if(NotificarCamposGenerico(id_form)){
         var dadosAPI = GetTnkValue();
-        var id_user_logado = dadosAPI.id_fucionario;
+        var id_user_logado = dadosAPI.id_funcionario;
+        //var id_user_logado = "30";
         var dados = {
             endpoint: "VerificarSenhaAtualAPI",
             id: id_user_logado,
@@ -205,13 +211,17 @@ function VerificarSenhaAtual(id_form){
                 'Content-Type': 'application/json'
             },
             success: function(dados_ret){
+                //alert("aqui");
+                console.log(dados_ret);
                 var resultado = dados_ret['result'];
-                
                 if(resultado == -1){
                     MensagemGenerica("Senha atual não confere");
                 }else if(resultado == 1){
                     $("#divSenhaAtual").hide();
                     $("#divSenhaNova").show();
+                }else if(resultado == -1000){
+                    ClearTnk();
+                    ChamarOutraPagina("login");
                 }
             }
         })
@@ -221,8 +231,9 @@ function VerificarSenhaAtual(id_form){
 
 function AtualizarSenha(id_form){
     if(NotificarCamposGenerico(id_form)){
-        var dadosAPI = GetTnkValue();
-        var id_user_logado = dadosAPI.id_fucionario;
+        //var dadosAPI = GetTnkValue();
+        //var id_user_logado = dadosAPI.id_fucionario;
+        var id_user_logado = "30";
         var dados = {
             endpoint: "AtualizarSenhaAPI",
             id: id_user_logado,
@@ -260,13 +271,11 @@ function AtualizarSenha(id_form){
 
 function ValidarAcesso(id_form){
     if(NotificarCamposGenerico(id_form)){
-        
         var dados = {
-            endpoint: "AutenticarAPI",
-            senha: $("#senha").val().trim(),
-            login: $("#login").val().trim()
+            login: $("#login").val(),
+            senha: $("#senha").val(),
+            endpoint: "AutenticarAPI"
         }
-
         $.ajax({
             type: "post",
             url: BASE_URL_AJAX("porteiro_funcionario_api"),
@@ -277,14 +286,13 @@ function ValidarAcesso(id_form){
             success: function(dados_ret){
                 //console.log(dados_ret);
                 var resultado = dados_ret['result'];
-                alert(resultado);
-                if (resultado == -5){
+                console.log(resultado);
+                if (resultado == -3){
                     MensagemGenerica("Usuario não autorizado");
                 }else{
                     AddTnk(resultado);
                     location = "meus_chamados.php";
                 }
-                
             }
         })
     }
