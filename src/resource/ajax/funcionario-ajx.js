@@ -1,9 +1,14 @@
+function MeuPerfil(){
+    let dadosAPI = GetTnkValue();
+    let nome = '<span style="color: #007bff;">'+ dadosAPI.nome_usuario + '</span>';
+    $("#divNomePerfil").html(nome);
+}
 function CarregarMeusDados(){
-    //var dadosAPI = GetTnkValue();
-    //var id_user_logado = dadosAPI.id_fucionario;
-    var id_user_logado = "30";
-    var endpoint_cliente = "DetalharMeusDadosAPI";
-    var dados = {
+    let dadosAPI = GetTnkValue();
+    let id_user_logado = dadosAPI.id_funcionario;
+    //var id_user_logado = "30";
+    let endpoint_cliente = "DetalharMeusDadosAPI";
+    let dados = {
         endpoint: endpoint_cliente,
         id_user: id_user_logado
     }
@@ -12,6 +17,7 @@ function CarregarMeusDados(){
         url: BASE_URL_AJAX("porteiro_funcionario_api"),
         data: JSON.stringify(dados),
         headers:{
+            'Authorization': 'Bearer ' + GetTnk(),
             'Content-Type': 'application/json'
         }, success: function(dados_ret){
             var resultado = dados_ret["result"];
@@ -25,18 +31,22 @@ function CarregarMeusDados(){
             $("#cidade").val(resultado.cidade);
             $("#uf").val(resultado.sigla_estado);
             $("#id_end").val(resultado.id_end);
+            if (resultado == -1000){
+                ClearTnk();
+                ChamarOutraPagina("login");
+            }
         }
     })
 }
 
 function AlterarMeusDados(id_form){
     if(NotificarCamposGenerico(id_form)){
-        //var dadosAPI = GetTnkValue();
-        //var id_user_logado = dadosAPI.id_fucionario;
-        //var id_setor_fun = dadosAPI.setor_usuario;
-        var id_user_logado = "30";
-        var id_setor_fun = "23";
-        var dados = {
+        let dadosAPI = GetTnkValue();
+        let id_user_logado = dadosAPI.id_funcionario;
+        let id_setor_fun = dadosAPI.setor_usuario;
+        //let id_user_logado = "30";
+        //let id_setor_fun = "23";
+        let dados = {
             id_user: id_user_logado,
             endpoint: "AlterarMeusDadosAPI", 
             nome: $("#fuNome").val().trim(),
@@ -55,14 +65,18 @@ function AlterarMeusDados(id_form){
             url: BASE_URL_AJAX("porteiro_funcionario_api"),
             data: JSON.stringify(dados),
             headers:{
+                'Authorization': 'Bearer ' + GetTnk(),
                 'Content-Type': 'application/json'
             }, success: function(dados_ret){
                 var resultado = dados_ret["result"];
                 //console.log(resultado);
                 if(resultado == 1){
                     MensagemSucesso();
-                }else{
+                } else if (resultado == -1){
                     MensagemErro();
+                } else if (resultado == -1000){
+                    ClearTnk();
+                    ChamarOutraPagina("login");
                 }
             }
         })
@@ -71,12 +85,12 @@ function AlterarMeusDados(id_form){
 }
 
 function CarregarEquipamentosAlocados(){
-    //var dadosAPI = GetTnkValue();
-    //var id_setor_fun = dadosAPI.setor_usuario;
-    var id_setor_fun = "23";
-    var combo_equipamento = $("#equipamento");
+    let dadosAPI = GetTnkValue();
+    let id_setor_fun = dadosAPI.setor_usuario;
+    //let id_setor_fun = "23";
+    let combo_equipamento = $("#equipamento");
     combo_equipamento.empty();
-    var dados = {
+    let dados = {
         endpoint: "SelecionarEquipamentosAlocadosAPI",
         id_setor: id_setor_fun
     }
@@ -85,27 +99,31 @@ function CarregarEquipamentosAlocados(){
         url: BASE_URL_AJAX("porteiro_funcionario_api"),
         data: JSON.stringify(dados),
         headers:{
+            'Authorization': 'Bearer ' + GetTnk(),
             'Content-Type': 'application/json'
         },
         success: function(dados_ret){
-            var resultado = dados_ret["result"];
+            let resultado = dados_ret["result"];
             //console.log(resultado);
             $('<option>').val("").text("Selecione").appendTo(combo_equipamento);
             $(resultado).each(function(){
                $('<option>').val(this.alocID).text(this.TipoEnome + " / " + this.nomeMo + " / " + this.identificacao).appendTo(combo_equipamento);
-            })
-
+            });
+            if (resultado == -1000){
+                ClearTnk();
+                ChamarOutraPagina("login");
+            }
         }
-    })
+    });
 
 }
 
 function AbrirChamado(id_form){
     if(NotificarCamposGenerico(id_form)){
-        //var dadosAPI = GetTnkValue();
-        //var id_user_logado = dadosAPI.id_fucionario;
-        var id_user_logado = "30";
-        var dados = {
+        let dadosAPI = GetTnkValue();
+        let id_user_logado = dadosAPI.id_funcionario;
+        //let id_user_logado = "30";
+        let dados = {
             endpoint: "AbrirChamadoAPI",
             id_user: id_user_logado,
             problema: $("#fuObs").val().trim(),
@@ -116,17 +134,21 @@ function AbrirChamado(id_form){
             url: BASE_URL_AJAX("porteiro_funcionario_api"),
             data: JSON.stringify(dados),
             headers:{
+                'Authorization': 'Bearer ' + GetTnk(),
                 'Content-Type': 'application/json'
             },
             success: function(dados_ret){
-                var resultado = dados_ret['result'];
+                let resultado = dados_ret['result'];
                 //console.log(resultado);
                 if(resultado == 1){
                     MensagemSucesso();
                     CarregarEquipamentosAlocados();
                     LimparCampos(id_form);
-                }else{
+                }else if (resultado == -1){
                     MensagemErro();
+                } else if (resultado == -1000){
+                    ClearTnk();
+                    ChamarOutraPagina("login");
                 }
             }
         })
@@ -134,8 +156,7 @@ function AbrirChamado(id_form){
 }
 
 function FiltrarChamado(){
-
-    var dados = {
+    let dados = {
         situacao: $("#situacao").val(),
         endpoint: "FiltrarChamadoAPI"
     }
@@ -147,13 +168,13 @@ function FiltrarChamado(){
             'Content-Type': 'application/json'
         },
         success: function(dados_ret){
-            var ret_chamado = dados_ret['result'];
+            let ret_chamado = dados_ret['result'];
             //console.log(resultado);
             if (ret_chamado != ""){
-                var table_start = '';
-                var table_head = '';
-                var table_data = '';
-                var table_end = '';
+                let table_start = '';
+                let table_head = '';
+                let table_data = '';
+                let table_end = '';
 
                 table_start = '<table class="table table-hover" id="divTable"><thead>';
                     table_head = '<tr>';
@@ -193,10 +214,10 @@ function FiltrarChamado(){
 
 function VerificarSenhaAtual(id_form){
     if(NotificarCamposGenerico(id_form)){
-        var dadosAPI = GetTnkValue();
-        var id_user_logado = dadosAPI.id_funcionario;
+        let dadosAPI = GetTnkValue();
+        let id_user_logado = dadosAPI.id_funcionario;
         //var id_user_logado = "30";
-        var dados = {
+        let dados = {
             endpoint: "VerificarSenhaAtualAPI",
             id: id_user_logado,
             senha: $("#fuSenhaAtual").val().trim()
@@ -219,6 +240,7 @@ function VerificarSenhaAtual(id_form){
                 }else if(resultado == 1){
                     $("#divSenhaAtual").hide();
                     $("#divSenhaNova").show();
+                    LimparCampos(id_form);
                 }else if(resultado == -1000){
                     ClearTnk();
                     ChamarOutraPagina("login");
@@ -231,10 +253,11 @@ function VerificarSenhaAtual(id_form){
 
 function AtualizarSenha(id_form){
     if(NotificarCamposGenerico(id_form)){
-        //var dadosAPI = GetTnkValue();
-        //var id_user_logado = dadosAPI.id_fucionario;
-        var id_user_logado = "30";
-        var dados = {
+        let dadosAPI = GetTnkValue();
+        let id_user_logado = dadosAPI.id_funcionario;
+        console.log(id_user_logado);
+       // var id_user_logado = "30";
+        let dados = {
             endpoint: "AtualizarSenhaAPI",
             id: id_user_logado,
             senha: $("#fuSenha").val().trim(),
@@ -248,7 +271,7 @@ function AtualizarSenha(id_form){
                 'Content-Type': 'application/json'
             },
             success: function(dados_ret){
-                var resultado = dados_ret['result'];
+                let resultado = dados_ret['result'];
                 if (resultado == -2){
                     MensagemGenerica("A senha deverá conter no mínimo 6 caracteres");
                 } else if (resultado == -3){
@@ -257,6 +280,7 @@ function AtualizarSenha(id_form){
                     MensagemSucesso();
                     $("#divSenhaNova").hide();
                     $("#divSenhaAtual").show();
+                    $("#fuSenha").val('');
                 } else if (resultado == -1){
                     MensagemErro();
                 } else if (resultado == -1000){
@@ -271,7 +295,7 @@ function AtualizarSenha(id_form){
 
 function ValidarAcesso(id_form){
     if(NotificarCamposGenerico(id_form)){
-        var dados = {
+        let dados = {
             login: $("#login").val(),
             senha: $("#senha").val(),
             endpoint: "AutenticarAPI"
@@ -285,7 +309,7 @@ function ValidarAcesso(id_form){
             },
             success: function(dados_ret){
                 //console.log(dados_ret);
-                var resultado = dados_ret['result'];
+                let resultado = dados_ret['result'];
                 console.log(resultado);
                 if (resultado == -3){
                     MensagemGenerica("Usuario não autorizado");

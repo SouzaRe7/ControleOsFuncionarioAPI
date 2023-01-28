@@ -100,6 +100,7 @@ require_once dirname(__DIR__, 2) . '/vendor/autoload.php';
 
     <?php include_once PATH_URL . '/template/_includes/_script.php' ?>
     <script src="../resource/ajax/funcionario-ajx.js"></script>
+    <script>MeuPerfil()</script>
 </body>
 
 </html>

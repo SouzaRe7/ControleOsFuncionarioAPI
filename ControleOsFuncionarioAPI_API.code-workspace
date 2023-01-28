@@ -5,6 +5,9 @@
 		},
 		{
 			"path": "../ControlesOs1"
+		},
+		{
+			"path": "../ControleOsTecnicoAPI"
 		}
 	],
 	"settings": {}
