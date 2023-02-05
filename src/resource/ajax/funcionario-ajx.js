@@ -156,15 +156,20 @@ function AbrirChamado(id_form){
 }
 
 function FiltrarChamado(){
+    let dadosAPI = GetTnkValue();
+    let id_setor_logado = dadosAPI.setor_usuario;
     let dados = {
         situacao: $("#situacao").val(),
+        id_setor: id_setor_logado,
         endpoint: "FiltrarChamadoAPI"
     }
+    //console.log(id_setor_logado);
     $.ajax({
         type: "POST",
         url: BASE_URL_AJAX("porteiro_funcionario_api"),
         data: JSON.stringify(dados),
         headers:{
+            'Authorization': 'Bearer ' + GetTnk(),
             'Content-Type': 'application/json'
         },
         success: function(dados_ret){
