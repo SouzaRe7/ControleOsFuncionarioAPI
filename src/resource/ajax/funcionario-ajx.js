@@ -183,25 +183,33 @@ function FiltrarChamado(){
 
                 table_start = '<table class="table table-hover" id="divTable"><thead>';
                     table_head = '<tr>';
+                    table_head += '<th>ver mais</th>';
                     table_head += '<th>Data abertura</th>';
                     table_head += '<th>Funcionário</th>';
                     table_head += '<th>Equipamento</th>';
                     table_head += '<th>Problema</th>';
-                    table_head += '<th>Data atendimento</th>';
-                    table_head += '<th>Técnico</th>';
-                    table_head += '<th>Data encerramento</th>';
-                    table_head += '<th>Laudo</th>';
+                    table_head += '<th>Status</th>';
                     table_head += '</tr></thead><tbody>';
                 $(ret_chamado).each(function(){
                     table_data += '<tr>';
+                    table_data += '<td>';
+                    if(this.data_adendimento != null){
+                        table_data += '<button onclick="CarregarVerMais('+"'"+this.data_adendimento+"'"+','+"'"+ this.data_encerramento+"'"+','+"'"+ this.tecnico_nome+"'"+','+"'"+ this.nome_tec_encerramento+"'"+','+"'"+ this.laudo_tecnico+"'"+')" type="button" data-toggle="modal" data-target="#modal-ver-mais" class="btn btn-block bg-gradient-primary btn-xs">Ver mais</button>';
+                    }
+                    table_data += '</td>';
                     table_data += '<td>' + this.data_abertura + '</td>';
                     table_data += '<td>' + this.nome_func + '</td>';
                     table_data += '<td>' + this.identificacao + ' / Modelo: '  + this.nome_modelo + ' / ' + this.nome_tipo + '</td>';
                     table_data += '<td>' + this.descricao_problema + '</td>';
-                    table_data += '<td>' + (this.data_adendimento == null ? '-' : this.data_adendimento) + '</td>';
-                    table_data += '<td>' + (this.nome_tec == null ? '-' : this.nome_tec) + '</td>';
-                    table_data += '<td>' + (this.data_encerramento == null ? '-' : this.data_encerramento) + '</td>';
-                    table_data += '<td>' + (this.laudo_tecnico == null ? '-' : this.laudo_tecnico) + '</td>';
+                    table_data += '<td>'; 
+                    if(this.data_adendimento == null){
+                        table_data += '<span class="badge badge-warning">Aguardando</span>'; 
+                    }else if(this.data_adendimento != null && this.data_encerramento == null){
+                        table_data += '<span class="badge badge-primary">Iniciado</span>';
+                    }else if(this.data_adendimento != null && this.data_encerramento != null){
+                        table_data += '<span class="badge badge-success">Concluído</span>';
+                    }
+                    table_data += '</td>';
                     table_data += '</tr>';
                 })
                 table_end = '</tbody></table>';

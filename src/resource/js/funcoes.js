@@ -58,6 +58,19 @@ function LimparNotificarCamposGenerico(form_id){
         $(this).removeClass("is-valid");
     })
 }
+function CarregarVerMais(DtAtendimento, DtEncerramento, TecnicoAtendimento, TecnicoEncerramento, Laudo){
+    $("#modalDtAtendimento").val(DtAtendimento);
+    $("#modalDtEncerramento").val(DtEncerramento);
+    $("#modalTecnicoAtendimento").val(TecnicoAtendimento);
+    $("#modalTecnicoEncerramento").val(TecnicoEncerramento);
+    $("#modalLaudo").val(Laudo);
+    if(DtEncerramento == "null"){
+        let msg = "Não foi encerrado";
+        $("#modalDtEncerramento").val(msg);
+        $("#modalTecnicoEncerramento").val(msg);
+        $("#modalLaudo").val(msg);
+    }
+}
 function AddTnk(t) {
     localStorage.setItem('user_tkn', t);
 }

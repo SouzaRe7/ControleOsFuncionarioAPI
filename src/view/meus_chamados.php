@@ -75,6 +75,7 @@ require_once dirname(__DIR__, 2) . '/vendor/autoload.php';
                                            
                                         </table>
                                     </div>
+                                    <?php include_once 'modal/modal_ver_mais.php'; ?>
                                     <!-- /.card-body -->
                                 </div>
                                 <!-- /.card -->
