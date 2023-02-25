@@ -83,7 +83,7 @@ require_once dirname(__DIR__, 2) . '/vendor/autoload.php';
     <script src="../resource/ajax/funcionario-ajx.js"></script>
     <script>CarregarEquipamentosAlocados();</script>
     <script>Verify();</script>
-    <script>MeuPerfil()</script>
+    <script>MeuPerfil();</script>
 </body>
 
 </html>
