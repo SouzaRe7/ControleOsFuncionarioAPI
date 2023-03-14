@@ -57,11 +57,11 @@ require_once dirname(__DIR__, 2) . '/vendor/autoload.php';
                                 <div class="row">
                                     <div class="form-group col-md-6">
                                         <label>E-mail</label>
-                                        <input id="fuEmail" name="fuEmail" class="form-control obg" placeholder="E-mail">
+                                        <input id="fuEmail" name="fuEmail" class="form-control obg" onchange="VerificarEmail(this.value)" placeholder="E-mail">
                                     </div>
                                     <div class="form-group col-md-6">
                                         <label>Telefone</label>
-                                        <input id="fuFone" name="fuFone" class="form-control obg" placeholder="Telefone">
+                                        <input id="fuFone" name="fuFone" class="form-control cel obg" placeholder="Telefone">
                                     </div>
                                     <div class="form-group col-md-4">
                                             <label>Cep</label>

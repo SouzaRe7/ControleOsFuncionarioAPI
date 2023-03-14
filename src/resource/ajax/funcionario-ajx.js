@@ -121,6 +121,9 @@ function CarregarEquipamentosAlocados(){
 function AbrirChamado(id_form){
     if(NotificarCamposGenerico(id_form)){
         let dadosAPI = GetTnkValue();
+        if (!dadosAPI.id_funcionario){
+            Sair();
+        }
         let id_user_logado = dadosAPI.id_funcionario;
         //let id_user_logado = "30";
         let dados = {
@@ -334,4 +337,95 @@ function ValidarAcesso(id_form){
         })
     }
     return false;
+}
+
+function VerificarEmail(emailTela)
+{ 
+    if(emailTela != "")
+    { 
+        let dadosAPI = GetTnkValue();
+        let id_user_logado = dadosAPI.id_funcionario;
+        let dados = {
+            endpoint: "VerificarEmailAPI",
+            fuEmail: $("#fuEmail").val(),
+            id: id_user_logado
+        }
+        $.ajax({
+            type: 'post',
+            url: BASE_URL_AJAX("porteiro_funcionario_api"),
+            data: JSON.stringify(dados),
+            headers:{
+                'Authorization': 'Bearer ' + GetTnk(),
+                'Content-Type': 'application/json'
+            },
+            success: function(ret){
+                if(ret['result'] == false){
+                    MensagemGenerica("O e-mail " + emailTela + " já existe!");
+                    $("#fuEmail").val('');
+                    $("#fuEmail").focus();
+                }
+            }
+        })
+    }
+}
+
+function limpa_formulario_cep() {
+    // Limpa valores do formulário de cep.
+    $("#rua").val("");
+    $("#bairro").val("");
+    $("#cidade").val("");
+    $("#uf").val("");
+}
+function TravarCamposEndereco(readonly){
+    $("#cidade").attr("readonly",readonly);
+    $("#uf").attr("readonly",readonly);  
+}
+//Quando o campo cep perde o foco.
+function BuscarCep() {
+
+    //Nova variável "cep" somente com dígitos.
+    var cep = $("#cep").val().replace(/\D/g, '');
+
+    //Verifica se campo cep possui valor informado.
+    if (cep != "") {
+
+        //Expressão regular para validar o CEP.
+        var validacep = /^[0-9]{8}$/;
+
+        //Valida o formato do CEP.
+        if (validacep.test(cep)) {
+
+            //Preenche os campos com "..." enquanto consulta webservice.
+            $("#rua").val("...");
+            $("#bairro").val("...");
+            $("#cidade").val("...");
+            $("#uf").val("...");
+
+            //Consulta o webservice viacep.com.br/
+            $.getJSON("https://viacep.com.br/ws/" + cep + "/json/?callback=?", function (dados) {
+
+                if (!("erro" in dados)) {
+                    //Atualiza os campos com os valores da consulta.
+                    $("#rua").val(dados.logradouro);
+                    $("#bairro").val(dados.bairro);
+                    $("#cidade").val(dados.localidade);
+                    $("#uf").val(dados.uf);
+                    TravarCamposEndereco(true);
+                } //end if.
+                else {
+                    //CEP pesquisado não foi encontrado.
+                    limpa_formulario_cep();
+                    TravarCamposEndereco(false);
+                }
+            });
+        } //end if.
+        else {
+            //cep é inválido.
+            limpa_formulario_cep();
+        }
+    } //end if.
+    else {
+        //cep sem valor, limpa formulário.
+        limpa_formulario_cep();
+    }
 }
